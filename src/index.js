@@ -29,10 +29,11 @@ class Channel {
   close() {
     this.closed = true;
 
-    // Resolves writes that are excess over maxBuffered
-    for (let i = this.maxBuffered; i < this.writes.length; i++) {
-      const write = this.writes.splice(i, 1)[0];
-      write.res();
+    // Reject writes that are excess over maxBuffered
+    const queued = this.writes.length;
+    for (let i = this.maxBuffered; i < queued; i++) {
+      const write = this.writes.splice(this.maxBuffered, 1)[0];
+      write.rej();
     }
   }
 

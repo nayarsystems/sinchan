@@ -240,3 +240,17 @@ test("numQueued must be <= maxBuffered", async () => {
 
   expect(ch.numQueued()).toEqual(2);
 });
+
+test("when closing channel excess writers should be rejected", async () => {
+  const ch = new sinchan.Channel(2);
+
+  expect.assertions(4);
+
+  expect(ch.write("how")).resolves.toEqual(null);
+  expect(ch.write("are")).resolves.toEqual(null);
+
+  expect(ch.write("you")).rejects.toEqual(new sinchan.ClosedChannelError());
+  expect(ch.write("doing")).rejects.toEqual(new sinchan.ClosedChannelError());
+
+  ch.close();
+});
