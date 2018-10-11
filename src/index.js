@@ -98,6 +98,7 @@ class Channel {
    * @return {number} - Number of elements queued on channel
    */
   numQueued() {
+    if (this.writes.length > this.maxBuffered) return this.maxBuffered;
     return this.writes.length;
   }
 }

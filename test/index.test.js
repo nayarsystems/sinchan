@@ -230,3 +230,13 @@ test("excess writes on buffered channel cannot be read after closing it", async 
   expect(await ch.read()).toEqual("are");
   expect(await ch.read()).toEqual(null);
 });
+
+test("numQueued must be <= maxBuffered", async () => {
+  const ch = new sinchan.Channel(2);
+
+  ch.write("how");
+  ch.write("are");
+  ch.write("you");
+
+  expect(ch.numQueued()).toEqual(2);
+});
