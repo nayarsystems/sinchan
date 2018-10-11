@@ -5,7 +5,7 @@ function ClosedChannelError() {}
  */
 class Channel {
   /**
-   * Create a channel.
+   * Creates a channel.
    * @param {number} maxBuffered - Number of buffered elements on channel (0 or undefined creates an unbuffered channel)
    */
   constructor(maxBuffered) {
@@ -38,7 +38,7 @@ class Channel {
   }
 
   /**
-   * Writes a value on the channel. Returns a promise that is resolved when the written value has been read
+   * Writes a value on the channel. Returns a promise that is resolved when the written value has written to the channel's buffer
    * @param {any} value - Value to write to channel
    */
   async write(value) {
@@ -74,6 +74,7 @@ class Channel {
     if (this.data.length > 0) {
       const value = this.data.splice(0, 1)[0];
 
+      // Insert awaiting write on buffer
       if (this.writes.length > 0) {
         const write = this.writes.splice(0, 1)[0];
         this.data.push(write.val);
@@ -102,8 +103,8 @@ class Channel {
   }
 
   /**
-   * Returns number of elements queued on channel
-   * @return {number} - Number of elements queued on channel
+   * Returns number of elements buffered on channel
+   * @return {number} - Number of elements buffered on channel
    */
   numQueued() {
     return this.data.length;
