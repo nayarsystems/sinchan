@@ -237,11 +237,31 @@ test("when closing channel excess writers should be rejected", async () => {
 
   expect.assertions(4);
 
-  expect(ch.write("how")).resolves.toEqual(null);
-  expect(ch.write("are")).resolves.toEqual(null);
+  ch.write("how").then(res => {
+    expect(res).toEqual(null);
+  });
 
-  expect(ch.write("you")).rejects.toEqual(new sinchan.ClosedChannelError());
-  expect(ch.write("doing")).rejects.toEqual(new sinchan.ClosedChannelError());
+  ch.write("are").then(res => {
+    expect(res).toEqual(null);
+  });
+
+  const p = new Promise(async (resolve, reject) => {
+    try {
+      await ch.write("you");
+      reject(new Error("shouldn't execute this"));
+    } catch (e) {
+      expect(e).toEqual(new sinchan.ClosedChannelError());
+    }
+    try {
+      await ch.write("doing");
+      reject(new Error("shouldn't execute this"));
+    } catch (e) {
+      expect(e).toEqual(new sinchan.ClosedChannelError());
+    }
+    resolve();
+  });
 
   ch.close();
+
+  await p;
 });

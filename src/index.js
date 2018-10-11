@@ -12,6 +12,7 @@ class Channel {
     this.closed = false;
     this.reads = [];
     this.writes = [];
+    this.data = [];
     this.maxBuffered = maxBuffered > 0 ? maxBuffered : 0;
   }
 
@@ -30,10 +31,9 @@ class Channel {
     this.closed = true;
 
     // Reject writes that are excess over maxBuffered
-    const queued = this.writes.length;
-    for (let i = this.maxBuffered; i < queued; i++) {
-      const write = this.writes.splice(this.maxBuffered, 1)[0];
-      write.rej();
+    while (this.writes.length > 0) {
+      const write = this.writes.splice(0, 1)[0];
+      write.rej(new ClosedChannelError());
     }
   }
 
@@ -52,7 +52,7 @@ class Channel {
       return null;
     }
 
-    if (this.writes.length >= this.maxBuffered) {
+    if (this.data.length >= this.maxBuffered) {
       return new Promise((resolve, reject) => {
         this.writes.push({
           val: value,
@@ -62,12 +62,7 @@ class Channel {
       });
     }
 
-    this.writes.push({
-      val: value,
-      res: () => {},
-      rej: () => {}
-    });
-
+    this.data.push(value);
     return null;
   }
 
@@ -76,14 +71,26 @@ class Channel {
    * @return {any} - Value read
    */
   async read() {
-    if (this.writes.length > 0) {
-      const write = this.writes.splice(0, 1)[0];
-      write.res();
-      return write.val;
+    if (this.data.length > 0) {
+      const value = this.data.splice(0, 1)[0];
+
+      if (this.writes.length > 0) {
+        const write = this.writes.splice(0, 1)[0];
+        this.data.push(write.val);
+        write.res();
+      }
+
+      return value;
     }
 
     if (this.closed) {
       return null;
+    }
+
+    if (this.writes.length > 0) {
+      const write = this.writes.splice(0, 1)[0];
+      write.res();
+      return write.val;
     }
 
     return new Promise((resolve, reject) => {
@@ -99,8 +106,7 @@ class Channel {
    * @return {number} - Number of elements queued on channel
    */
   numQueued() {
-    if (this.writes.length > this.maxBuffered) return this.maxBuffered;
-    return this.writes.length;
+    return this.data.length;
   }
 }
 
