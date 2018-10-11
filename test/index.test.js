@@ -184,15 +184,6 @@ test("return number of queued elements on channel", async () => {
 test("return number of queued elements on channel", async () => {
   const ch = new sinchan.Channel(3);
 
-  await ch.write("hello");
-  await ch.write("world");
-
-  expect(ch.numQueued()).toEqual(2);
-});
-
-test("closed channel returns queued elements", async () => {
-  const ch = new sinchan.Channel(3);
-
   await ch.write("how");
   await ch.write("are");
   await ch.write("you");
