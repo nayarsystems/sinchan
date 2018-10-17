@@ -1,4 +1,8 @@
-function ClosedChannelError() {}
+class ClosedChannelError extends Error {
+  constructor(...args) {
+    super("Closed channel", ...args);
+  }
+}
 
 /**
  * Channel functions like a Go channel.
