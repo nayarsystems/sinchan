@@ -11,7 +11,8 @@
     "build": "webpack --mode production",
     "dev": "webpack --mode development",
     "eslint-check": "eslint --print-config .eslintrc.json | eslint-config-prettier-check",
-    "flow": "flow"
+    "flow": "flow",
+    "prepublishOnly": "./node_modules/.bin/eslint src/ && npm run test && rm dist/* && npm run build"
   },
   "jest": {
     "collectCoverage": true,
