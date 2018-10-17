@@ -2,7 +2,7 @@
   "name": "sinchan",
   "version": "1.0.0",
   "description": "Go channels on JS",
-  "main": "index.js",
+  "main": "dist/sinchan.js",
   "scripts": {
     "test": "jest",
     "build": "webpack --mode production",
