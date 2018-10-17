@@ -2,7 +2,10 @@
   "name": "sinchan",
   "version": "1.0.2",
   "description": "Go channels on JS",
+  "author": "Angel Jimenez <ajimenez@nayarsystems.com>",
+  "license": "MIT",
   "main": "dist/sinchan.js",
+  "repository": "https://github.com/nayarsystems/sinchan",
   "scripts": {
     "test": "jest",
     "build": "webpack --mode production",
@@ -22,8 +25,6 @@
       "!.eslintrc.js"
     ]
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "coveralls": "^3.0.2",
     "eslint": "^5.6.1",
