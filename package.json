@@ -10,6 +10,18 @@
     "eslint-check": "eslint --print-config .eslintrc.json | eslint-config-prettier-check",
     "flow": "flow"
   },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.{js}",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/coverage/**",
+      "!**/flow-typed/**",
+      "!webpack.config.js",
+      "!.eslintrc.js"
+    ]
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
