@@ -1,6 +1,6 @@
 {
   "name": "sinchan",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Go channels on JS",
   "author": "Angel Jimenez <ajimenez@nayarsystems.com>",
   "license": "MIT",
